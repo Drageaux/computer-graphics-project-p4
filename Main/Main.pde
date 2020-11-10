@@ -16,11 +16,14 @@ Boolean
 
 float t=-1;
   
-
-  
-void setup() {
+void settings() {
+  // Fixes "Profile GL4bc not available" error on my computer
+  System.setProperty("jogl.disable.openglcore", "true");
   size(1200, 1200, P3D); // P3D means that we will do 3D graphics
   //size(800, 800, P3D); // P3D means that we will do 3D graphics
+}
+  
+void setup() {
   myFace = loadImage("data/pic.jpg");  // load image from file pic.jpg in folder data *** replace that file with your pic of your own face
   textureMode(NORMAL);          
   noSmooth();
