@@ -75,18 +75,26 @@ class BUG // class for manipulaitng a bug
   }
 
   void moveTowardsTarget(PNT newTarget) {
-    //**REMOVE**
-    float d = d(shadowOfCenterOfRingOfHips, newTarget);
-    VCT newDirection = U(V(shadowOfCenterOfRingOfHips, newTarget));
-    //.....
     target = newTarget;
   }
+  
+  float velocity = 2.0;
 
   void updateConfiguration() {
-    //VCT newDirection = U(V(shadowOfCenterOfRingOfHips, newTarget));
-    //shadowOfCenterOfRingOfHips = P(
     centerOfBody = P(shadowOfCenterOfRingOfHips, heightOfRingOfHips + bodyElevationAboveRingOfHips, upDirection);
     //.....
+    VCT newDirection = U(V(shadowOfCenterOfRingOfHips, target));
+    shadowOfCenterOfRingOfHips = P(shadowOfCenterOfRingOfHips, velocity, newDirection);
+    centerOfRingOfHips = P(centerOfRingOfHips, velocity, newDirection);
+    centerOfRingOfUpFeet = P(centerOfRingOfUpFeet, velocity, newDirection);
+    
+    for (int i = 0; i < 6; i++) {
+      hips[i] = P(hips[i], velocity, newDirection);
+    }
+    
+    for (int i = 0; i < 6; i++) {
+      feet[i] = P(feet[i], velocity, newDirection);
+    }
   }
 
   void swapFeet() {
