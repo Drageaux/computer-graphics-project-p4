@@ -1,10 +1,11 @@
 // points, vectors, frames in 3D
 class VCT {
-  float x = 0,
-  y = 0,
-  z = 0;
+  float x = 0, 
+    y = 0, 
+    z = 0;
   // creation    
-  VCT() {};
+  VCT() {
+  };
   VCT(float px, float py, float pz) {
     x = px;
     y = py;
@@ -90,10 +91,10 @@ class VCT {
   };
   VCT rotate(float a, VCT I, VCT J) // Rotate this by angle a parallel in plane (I,J) Assumes I and J are orthogonal
   {
-    float x = d(this, I),
-    y = d(this, J); // dot products
-    float c = cos(a),
-    s = sin(a);
+    float x = d(this, I), 
+      y = d(this, J); // dot products
+    float c = cos(a), 
+      s = sin(a);
     add(x * c - x - y * s, I);
     add(x * s + y * c - y, J);
     return this;
@@ -104,10 +105,11 @@ class VCT {
   } // rotate this V by a around U, assuming|U|==1 and V*U==0
 } // end class vec
 class PNT {
-  float x = 0,
-  y = 0,
-  z = 0;
-  PNT() {};
+  float x = 0, 
+    y = 0, 
+    z = 0;
+  PNT() {
+  };
   PNT(float px, float py) {
     x = px;
     y = py;
@@ -414,10 +416,10 @@ VCT R(VCT V) {
   return V( - V.y, V.x, V.z);
 } // rotated 90 degrees in XY plane
 PNT R(PNT P, float a, VCT I, VCT J, PNT G) {
-  float x = d(V(G, P), I),
-  y = d(V(G, P), J);
-  float c = cos(a),
-  s = sin(a);
+  float x = d(V(G, P), I), 
+    y = d(V(G, P), J);
+  float c = cos(a), 
+    s = sin(a);
   return P(P, x * c - x - y * s, I, x * s + y * c - y, J);
 }; // Rotated P by a around G in plane (I,J)
 VCT R(VCT V, float a, VCT U) {
@@ -434,38 +436,38 @@ VCT LPM(VCT U, float t, VCT V) // log-polar morph between U and V
   return V(pow(m, t), W);
 }
 VCT R(VCT V, float a, VCT I, VCT J) {
-  float x = d(V, I),
-  y = d(V, J);
-  float c = cos(a),
-  s = sin(a);
+  float x = d(V, I), 
+    y = d(V, J);
+  float c = cos(a), 
+    s = sin(a);
   return A(V, V(x * c - x - y * s, I, x * s + y * c - y, J));
 }; // Rotated V by a parallel to plane (I,J)
 PNT R(PNT Q, float a) {
-  float dx = Q.x,
-  dy = Q.y,
-  c = cos(a),
-  s = sin(a);
+  float dx = Q.x, 
+    dy = Q.y, 
+    c = cos(a), 
+    s = sin(a);
   return P(c * dx + s * dy, -s * dx + c * dy, Q.z);
 }; // Q rotated by angle a around the origin
 PNT R(PNT Q, float a, PNT C) {
-  float dx = Q.x - C.x,
-  dy = Q.y - C.y,
-  c = cos(a),
-  s = sin(a);
+  float dx = Q.x - C.x, 
+    dy = Q.y - C.y, 
+    c = cos(a), 
+    s = sin(a);
   return P(C.x + c * dx - s * dy, C.y + s * dx + c * dy, Q.z);
 }; // Q rotated by angle a around point P
 PNT R(PNT Q, PNT C, PNT P, PNT R) // returns rotated version of Q by angle(CP,CR) parallel to plane (C,P,R)
 {
-  VCT I0 = U(C, P),
-  I1 = U(C, R),
-  V = V(C, Q);
-  float c = d(I0, I1),
-  s = sqrt(1. - sq(c));
+  VCT I0 = U(C, P), 
+    I1 = U(C, R), 
+    V = V(C, Q);
+  float c = d(I0, I1), 
+    s = sqrt(1. - sq(c));
   if (abs(s) < 0.00001) return Q; // singular cAW
   VCT J0 = V(1. / s, I1, -c / s, I0);
   VCT J1 = V( - s, I0, c, J0);
-  float x = d(V, I0),
-  y = d(V, J0);
+  float x = d(V, I0), 
+    y = d(V, J0);
   return P(Q, x, M(I1, I0), y, M(J1, J0));
 }
 

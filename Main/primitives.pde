@@ -9,12 +9,12 @@ void sphere(PNT P, float r) {
 // **************************** PRIMITIVE FROM POINT, VECTOR, RADIUS PARAMETER
 void caplet(PNT A, float a, PNT B, float b) { // cone section surface that is tangent to Sphere(A,a) and to Sphere(B,b)
   VCT I = U(A, B);
-  float d = d(A, B),
-  s = b / a;
-  float x = (a - b) * a / d,
-  y = sqrt(sq(a) - sq(x));
-  PNT PA = P(A, x, I),
-  PB = P(B, s * x, I);
+  float d = d(A, B), 
+    s = b / a;
+  float x = (a - b) * a / d, 
+    y = sqrt(sq(a) - sq(x));
+  PNT PA = P(A, x, I), 
+    PB = P(B, s * x, I);
   coneSection(PA, PB, y, y * s);
 }
 
