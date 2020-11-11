@@ -14,7 +14,7 @@ class BUG // class for manipulaitng a bug
   float radiusOfHips=20; // hip ball radius
 
   // body sphere
-  float bodyElevartionAboveRingOfHips=5; //20
+  float bodyElevationAboveRingOfHips=5; //20
   float radiusOfBody=60; // 50
   
   // knees
@@ -48,31 +48,41 @@ class BUG // class for manipulaitng a bug
     
   BUG() {}
 
-  void declare() 
-    {
-    for (int i=0; i<6; i++) Hip[i]=P();
-    for (int i=0; i<6; i++) Foot[i]=P();
-    }     
+  void declare() {
+    VCT bodyToHip = V(0, radiusOfRingOfHips, heightOfRingOfHips);
+    PNT ringOfHipsCenter = P(CenterOfBody.x, CenterOfBody.y, heightOfRingOfHips);
+    Hip[0] = P(CenterOfBody, bodyToHip);
+    VCT xAxis = V(1, 0, 0);
+    VCT yAxis = V(0, 1, 0);
+    for (int i = 1; i < 6; i++) {
+      Hip[i] = R(Hip[i-1], PI / 3, xAxis, yAxis, ringOfHipsCenter);
+    }
+    
+    VCT bodyToFoot = V(0, radiusOfRingOfFeet, 0);
+    Foot[0] = P(CenterOfBody, bodyToFoot);
+    PNT ringOfFeetCenter = P(CenterOfBody.x, CenterOfBody.y, 0);
+    for (int i = 1; i < 6; i++) {
+      Foot[i] = R(Foot[i-1], PI / 3, xAxis, yAxis, ringOfFeetCenter);
+    }
+  }
   
-  void reset() 
-    {
+  void reset() {
     ShadowOfCenterOfRingOfHips=P();
     CenterOfRingOfDownFeet=P();
     ForwardDirection=V(1,0,0);
     rotationAngle=0;
-    }     
+  }     
   
-  void moveTowardsTarget(PNT Target) 
-    {
+  void moveTowardsTarget(PNT Target) {
     //**REMOVE**
     float d=d(ShadowOfCenterOfRingOfHips,Target); // distace to Target
     VCT NewDirection=U(V(ShadowOfCenterOfRingOfHips,Target));
     //.....
-    }     
+  }     
   
    void updateConfiguration() 
     {
-    CenterOfBody=P(ShadowOfCenterOfRingOfHips,heightOfRingOfHips+bodyElevartionAboveRingOfHips,UpDirection);
+    CenterOfBody=P(ShadowOfCenterOfRingOfHips,heightOfRingOfHips+bodyElevationAboveRingOfHips,UpDirection);
     //.....
     }     
 

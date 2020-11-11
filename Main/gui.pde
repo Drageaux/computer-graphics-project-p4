@@ -13,7 +13,7 @@ void keyPressed()
 
 void mouseWheel(MouseEvent event) 
   {
-  dz -= event.getAmount(); 
+  dz -= event.getAmount() * 60; 
   change=true;
   }
 
