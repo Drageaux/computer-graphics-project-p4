@@ -127,7 +127,7 @@ float area(PNT A, PNT B, PNT C) {return n(N(A,B,C))/2; };                       
 float volume(PNT A, PNT B, PNT C, PNT D) {return m(V(A,B),V(A,C),V(A,D))/6; };                           // (signed) volume of tetrahedron
 boolean parallel (VCT U, VCT V) {return n(N(U,V))<n(U)*n(V)*0.00001; }                               // true if U and V are almost parallel
 float angle(VCT U, VCT V) {return acos(d(U,V)/n(V)/n(U)); };                                         // angle(U,V) positive  (in 0,PI)
-float angleAroundVertical(VCT U, VCT V) {return atan2(mixed(UpDirection,U,V),d(U,V)); };                                         // angle(U,V) positive  (in 0,PI)
+float angleAroundVertical(VCT U, VCT V) {return atan2(mixed(upDirection,U,V),d(U,V)); };                                         // angle(U,V) positive  (in 0,PI)
 boolean cw(VCT U, VCT V, VCT W) {return m(U,V,W)>0; };                                               // U*(VxW)>0  U,V,W are clockwise in 3D
 boolean cw(PNT A, PNT B, PNT C, PNT D) {return volume(A,B,C,D)>0; };                                     // tet is oriented so that A sees B, C, D clockwise 
 boolean projectsBetween(PNT P, PNT A, PNT B) {return dot(V(A,P),V(A,B))>0 && dot(V(B,P),V(B,A))>0 ; };
