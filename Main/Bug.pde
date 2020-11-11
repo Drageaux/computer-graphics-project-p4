@@ -32,57 +32,57 @@ class BUG // class for manipulaitng a bug
   float stepLength=3;  // controls translation speed towards Target
 
   // ***** CONTROL PARAMETERS *****
-  VCT ForwardDirection=V(); // where the bug is facing
-  PNT ShadowOfCenterOfRingOfHips=P(); // floor projection of the center of the body of the bug
-  PNT CenterOfRingOfDownFeet=P(); // remembers the floor projection of the centtoid of the 3 support feet
+  VCT forwardDirection=V(); // where the bug is facing
+  PNT shadowOfCenterOfRingOfHips=P(); // floor projection of the center of the body of the bug
+  PNT centerOfRingOfDownFeet=P(); // remembers the floor projection of the centtoid of the 3 support feet
   float rotationAngle=0;
   boolean evenFeetAreSupporting=true; // used to toggle which are the fixed (support) feet
   
   // ***** COMPUTED PARAMETERS *****
-  PNT CenterOfRingOfHips=P();
-  PNT CenterOfBody=P();
-  PNT ShadowOfCenterOfRingOfUpFeet=P();
-  PNT CenterOfRingOfUpFeet=P();
-  PNT[] Hip = new PNT[6]; 
-  PNT[] Foot = new PNT[6]; 
+  PNT centerOfRingOfHips = P();
+  PNT centerOfBody = P();
+  PNT shadowOfCenterOfRingOfUpFeet = P();
+  PNT centerOfRingOfUpFeet = P();
+  PNT[] hips = new PNT[6]; 
+  PNT[] feet = new PNT[6]; 
     
   BUG() {}
 
   void declare() {
     VCT bodyToHip = V(0, radiusOfRingOfHips, heightOfRingOfHips);
-    PNT ringOfHipsCenter = P(CenterOfBody.x, CenterOfBody.y, heightOfRingOfHips);
-    Hip[0] = P(CenterOfBody, bodyToHip);
+    PNT ringOfHipsCenter = P(centerOfBody.x, centerOfBody.y, heightOfRingOfHips);
+    hips[0] = P(centerOfBody, bodyToHip);
     VCT xAxis = V(1, 0, 0);
     VCT yAxis = V(0, 1, 0);
     for (int i = 1; i < 6; i++) {
-      Hip[i] = R(Hip[i-1], PI / 3, xAxis, yAxis, ringOfHipsCenter);
+      hips[i] = R(hips[i-1], PI / 3, xAxis, yAxis, ringOfHipsCenter);
     }
     
     VCT bodyToFoot = V(0, radiusOfRingOfFeet, 0);
-    Foot[0] = P(CenterOfBody, bodyToFoot);
-    PNT ringOfFeetCenter = P(CenterOfBody.x, CenterOfBody.y, 0);
+    feet[0] = P(centerOfBody, bodyToFoot);
+    PNT ringOfFeetCenter = P(centerOfBody.x, centerOfBody.y, 0);
     for (int i = 1; i < 6; i++) {
-      Foot[i] = R(Foot[i-1], PI / 3, xAxis, yAxis, ringOfFeetCenter);
+      feet[i] = R(feet[i-1], PI / 3, xAxis, yAxis, ringOfFeetCenter);
     }
   }
   
   void reset() {
-    ShadowOfCenterOfRingOfHips=P();
-    CenterOfRingOfDownFeet=P();
-    ForwardDirection=V(1,0,0);
+    shadowOfCenterOfRingOfHips=P();
+    centerOfRingOfDownFeet=P();
+    forwardDirection=V(1,0,0);
     rotationAngle=0;
   }     
   
   void moveTowardsTarget(PNT Target) {
     //**REMOVE**
-    float d=d(ShadowOfCenterOfRingOfHips,Target); // distace to Target
-    VCT NewDirection=U(V(ShadowOfCenterOfRingOfHips,Target));
+    float d=d(shadowOfCenterOfRingOfHips,Target); // distace to Target
+    VCT NewDirection=U(V(shadowOfCenterOfRingOfHips,Target));
     //.....
   }     
   
    void updateConfiguration() 
     {
-    CenterOfBody=P(ShadowOfCenterOfRingOfHips,heightOfRingOfHips+bodyElevationAboveRingOfHips,UpDirection);
+    centerOfBody=P(shadowOfCenterOfRingOfHips,heightOfRingOfHips+bodyElevationAboveRingOfHips,UpDirection);
     //.....
     }     
 
@@ -94,18 +94,18 @@ class BUG // class for manipulaitng a bug
   void display() 
     {
     fill(brown); 
-    show(CenterOfBody,radiusOfBody);
+    show(centerOfBody,radiusOfBody);
     //.....
-    for (int i=0; i<6; i++) show(Hip[i],radiusOfHips);
-    for (int i=0; i<6; i++) caplet(CenterOfBody,radiusOfBody,Hip[i],radiusOfHips);
-    if(showBentLegs) for (int i=0; i<6; i++) {showBentLeg(Hip[i],Foot[i],limbLength,radiusOfHips);}
-    else for (int i=0; i<6; i++) {caplet(Hip[i],radiusOfHips,Foot[i],radiusOfFeet);}
+    for (int i=0; i<6; i++) show(hips[i],radiusOfHips);
+    for (int i=0; i<6; i++) caplet(centerOfBody,radiusOfBody,hips[i],radiusOfHips);
+    if(showBentLegs) for (int i=0; i<6; i++) {showBentLeg(hips[i],feet[i],limbLength,radiusOfHips);}
+    else for (int i=0; i<6; i++) {caplet(hips[i],radiusOfHips,feet[i],radiusOfFeet);}
     if(showControls)
       {
-      fill(blue); show(Target,20); arrow(CenterOfRingOfHips,Target,10);
-      fill(magenta); show(ShadowOfCenterOfRingOfHips,20); arrow(ShadowOfCenterOfRingOfHips,400,ForwardDirection,10);
-      fill(dgreen); show(CenterOfRingOfDownFeet,20);
-      fill(red);    show(CenterOfRingOfUpFeet,20);
+      fill(blue); show(Target,20); arrow(centerOfRingOfHips,Target,10);
+      fill(magenta); show(shadowOfCenterOfRingOfHips,20); arrow(shadowOfCenterOfRingOfHips,400,forwardDirection,10);
+      fill(dgreen); show(centerOfRingOfDownFeet,20);
+      fill(red);    show(centerOfRingOfUpFeet,20);
       }
     }     
 

@@ -33,7 +33,7 @@ void setup() {
   Bug.reset(); 
   Bug.updateConfiguration(); 
   
-  _LookAtPt.reset(Bug.CenterOfRingOfDownFeet,10);
+  _LookAtPt.reset(Bug.centerOfRingOfDownFeet,10);
   }
 
 void draw() {
