@@ -95,14 +95,15 @@ class BUG // class for manipulaitng a bug
         //.....
         for (int i = 0; i < 6; i++) show(hips[i], radiusOfHips);
         for (int i = 0; i < 6; i++) caplet(centerOfBody, radiusOfBody, hips[i], radiusOfHips);
-        if (showBentLegs)
+        if (showBentLegs) {
             for (int i = 0; i < 6; i++) {
                 showBentLeg(hips[i], feet[i], limbLength, radiusOfHips);
             }
-        else
+        } else {
             for (int i = 0; i < 6; i++) {
                 caplet(hips[i], radiusOfHips, feet[i], radiusOfFeet);
             }
+        }
         if (showControls) {
             fill(blue);
             show(target, 20);
