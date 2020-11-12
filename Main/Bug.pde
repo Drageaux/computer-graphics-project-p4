@@ -79,34 +79,70 @@ class BUG // class for manipulaitng a bug
   }
   
   float velocity = 2.0;
+  float distSinceLastSwap = 0; // Distance traveled since last time feet are swapped
+  float swapDistThreshold = 40; // Threshold of distSinceLastSwap to swap feet
 
   void updateConfiguration() {
     centerOfBody = P(shadowOfCenterOfRingOfHips, heightOfRingOfHips + bodyElevationAboveRingOfHips, upDirection);
-    //.....
     VCT newDirection = U(V(shadowOfCenterOfRingOfHips, target));
     shadowOfCenterOfRingOfHips = P(shadowOfCenterOfRingOfHips, velocity, newDirection);
     centerOfRingOfHips = P(centerOfRingOfHips, velocity, newDirection);
     centerOfRingOfUpFeet = P(centerOfRingOfUpFeet, velocity, newDirection);
     
-    for (int i = 0; i < 6; i++) {
-      hips[i] = P(hips[i], velocity, newDirection);
+    distSinceLastSwap += velocity;
+    if (distSinceLastSwap > swapDistThreshold) {
+      swapFeet();
     }
     
-    for (int i = 0; i < 6; i++) {
-      feet[i] = P(feet[i], velocity, newDirection);
+    VCT xAxis = V(1, 0, 0);
+    VCT yAxis = V(0, 1, 0);
+    PNT ringOfHipsCenter = P(centerOfBody.x, centerOfBody.y, heightOfRingOfHips);
+    
+    VCT hip0Direction = V(radiusOfRingOfHips, U(R(newDirection)));
+    
+    hips[0] = P(centerOfBody, hip0Direction);
+    
+    for (int i = 1; i < 6; i++) {
+      hips[i] = R(hips[i - 1], PI / 3, xAxis, yAxis, ringOfHipsCenter);
+    }
+    
+    int startIdx;
+    PNT ringOfFeetCenter = P(centerOfBody.x, centerOfBody.y, 0);
+    VCT foot0Direction = V(radiusOfRingOfFeet, U(R(newDirection)));
+    
+    PNT foot0Point = P(shadowOfCenterOfRingOfHips, foot0Direction);
+    
+    if (evenFeetAreSupporting) {
+      // Even indices stay the same; update odd indices
+      startIdx = 3;
+      feet[1] = R(foot0Point, PI / 3, xAxis, yAxis, ringOfFeetCenter);
+    } else {
+      // Odd indices stay the same; update even ones
+      startIdx = 2;
+      feet[0] = foot0Point;
+    }
+    
+    for (int i = startIdx; i < 6; i += 2) {
+      feet[i] = R(feet[i - 2], PI * 2 / 3, xAxis, yAxis, ringOfFeetCenter);
     }
   }
 
   void swapFeet() {
-    //.....
+    distSinceLastSwap = 0;
+    evenFeetAreSupporting = !evenFeetAreSupporting;
+    print("Swapping\n");
   }
 
   void display() {
     fill(brown);
     show(centerOfBody, radiusOfBody);
     //.....
-    for (int i = 0; i < 6; i++) show(hips[i], radiusOfHips);
-    for (int i = 0; i < 6; i++) caplet(centerOfBody, radiusOfBody, hips[i], radiusOfHips);
+    for (int i = 0; i < 6; i++) {
+      show(hips[i], radiusOfHips);
+    }
+    for (int i = 0; i < 6; i++) {
+      caplet(centerOfBody, radiusOfBody, hips[i], radiusOfHips);
+    }
     if (showBentLegs) {
       for (int i = 0; i < 6; i++) {
         showBentLeg(hips[i], feet[i], limbLength, radiusOfHips);
