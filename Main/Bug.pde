@@ -81,6 +81,9 @@ class BUG // class for manipulaitng a bug
   float velocity = 2.0;
   float distSinceLastSwap = 0; // Distance traveled since last time feet are swapped
   float swapDistThreshold = 40; // Threshold of distSinceLastSwap to swap feet
+  
+  VCT xAxis = V(1, 0, 0);
+  VCT yAxis = V(0, 1, 0);
 
   void updateConfiguration() {
     centerOfBody = P(shadowOfCenterOfRingOfHips, heightOfRingOfHips + bodyElevationAboveRingOfHips, upDirection);
@@ -94,28 +97,25 @@ class BUG // class for manipulaitng a bug
       swapFeet();
     }
     
-    VCT xAxis = V(1, 0, 0);
-    VCT yAxis = V(0, 1, 0);
-    PNT ringOfHipsCenter = P(centerOfBody.x, centerOfBody.y, heightOfRingOfHips);
-    
     VCT hip0Direction = V(radiusOfRingOfHips, U(R(newDirection)));
     
     hips[0] = P(centerOfBody, hip0Direction);
     
     for (int i = 1; i < 6; i++) {
-      hips[i] = R(hips[i - 1], PI / 3, xAxis, yAxis, ringOfHipsCenter);
+      hips[i] = R(hips[i - 1], PI / 3, xAxis, yAxis, centerOfBody);
     }
     
     int startIdx;
-    PNT ringOfFeetCenter = P(centerOfBody.x, centerOfBody.y, 0);
     VCT foot0Direction = V(radiusOfRingOfFeet, U(R(newDirection)));
     
+    // The final location that foot 0 should be in after rotation completes
     PNT foot0Point = P(shadowOfCenterOfRingOfHips, foot0Direction);
     
     if (evenFeetAreSupporting) {
       // Even indices stay the same; update odd indices
       startIdx = 3;
-      feet[1] = R(foot0Point, PI / 3, xAxis, yAxis, ringOfFeetCenter);
+      // TODO: do not rotate feet immediately to final angle; calculate how much rotation is needed and how much time is left
+      feet[1] = R(foot0Point, PI / 3, xAxis, yAxis, shadowOfCenterOfRingOfHips);
     } else {
       // Odd indices stay the same; update even ones
       startIdx = 2;
@@ -123,7 +123,7 @@ class BUG // class for manipulaitng a bug
     }
     
     for (int i = startIdx; i < 6; i += 2) {
-      feet[i] = R(feet[i - 2], PI * 2 / 3, xAxis, yAxis, ringOfFeetCenter);
+      feet[i] = R(feet[i - 2], PI * 2 / 3, xAxis, yAxis, shadowOfCenterOfRingOfHips);
     }
   }
 
