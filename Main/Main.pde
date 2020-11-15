@@ -1,7 +1,7 @@
 // 6491-2020-P4 
 // Base-code: Jarek ROSSIGNAC
-// Student 1: ??? ????
-// Student 2: ??? ????
+// Student 1: Chen Liu
+// Student 2: Thong Nguyen
 import processing.pdf.*; // to save screen shots as PDFs, does not always work: accuracy problems, stops drawing or messes up some curves !!!
 import java.awt.Toolkit;
 import java.awt.datatransfer.*;

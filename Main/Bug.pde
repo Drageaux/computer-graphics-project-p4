@@ -26,7 +26,7 @@ class BUG // class for manipulaitng a bug
   float upFeetMaxHeight = 150; // !! change and control
 
   // legs
-  float limbLength = 200;
+  float limbLength = 400;
 
   // motion
   float stepLength = 3; // controls translation speed towards Target
@@ -215,4 +215,38 @@ class BUG // class for manipulaitng a bug
 
 void showBentLeg(PNT A, PNT B, float l, float r) {
   //.....
+  // compute midpoint between foot and hip to make knee at mid
+  fill(blue);
+  arrow(A, B, 10);
+  
+  PNT mid = P(A, B);
+  float ogMidLegLength = V(A, mid).norm();
+ 
+  VCT vertical = V(A, P(A.x,A.y,B.z));
+  VCT straightLeg = V(A, B);
+  VCT orth = U(N(vertical, straightLeg)).mul(l);
+  
+  fill(red);
+  arrow(mid, orth, 10);
+
+  // use arbitrary leg section as hypotenuse; use original leg's mid length as one side
+  // to compute knee direction as well as its length from original leg's mid length
+  System.out.println("hip knee " + l/2 + " og mid " + ogMidLegLength);
+  float lengthFromOriginalMidToKnee = sqrt(sq(l/2)-sq(ogMidLegLength));
+  VCT kneeDir = U(N(orth, straightLeg)).mul(lengthFromOriginalMidToKnee);
+  PNT kneePos = P(mid, kneeDir);
+
+  fill(dgreen);
+  arrow(mid, kneePos, 10);
+  
+  fill(brown);
+  arrow(A, kneePos, 10);
+  arrow(kneePos, B, 10);
+  
+  //caplet(A, radiusOfKnees, kneePos, radiusOfFeet);
+  
+  
+  // green vector normal to knee is cross product of red and blue
+  // blue is from feet at ground to hip
+  // red is orthogonal at midpoint from feet at ground
 }
