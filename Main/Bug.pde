@@ -79,7 +79,7 @@ class BUG // class for manipulaitng a bug
   }
   
   static final float velocity = 1.0;
-  static final float angularVelocity = 0.1; // Max rotation per frame
+  static final float angularVelocity = 0.01; // Max rotation per frame
   float distSinceLastSwap = 0; // Distance traveled since last time feet are swapped
   static final float swapDistThreshold = 20; // Threshold of distSinceLastSwap to swap feet
   
@@ -100,18 +100,36 @@ class BUG // class for manipulaitng a bug
     }
     
     VCT currentBodyToFoot0 = U(V(shadowOfCenterOfRingOfHips, feet[0]));
-    // Final direction of hip0 after rotation completes
-    VCT finalFoot0Direction = R(newDirection, PI / 2, zAxis);
-    float angleToRotate = min(angle(currentBodyToFoot0, finalFoot0Direction), angularVelocity);
+    //float angleToRotate;
     
-    // Check whether to rotate clockwise or counter-clockwise
-    if (!cw(zAxis, currentBodyToFoot0, finalFoot0Direction)) {
-      angleToRotate = -angleToRotate;
-    }
+    //if (!evenFeetAreSupporting) {
+    //  // Final direction of hip0 after rotation completes
+    //  VCT finalFoot0Direction = R(newDirection, PI / 2, zAxis);
+    //  angleToRotate = min(angle(currentBodyToFoot0, finalFoot0Direction), angularVelocity);
+    //  print("Angle: " + angle(currentBodyToFoot0, finalFoot0Direction) + "\n");
+      
+    //  // Check whether to rotate clockwise or counter-clockwise
+    //  if (!cw(zAxis, currentBodyToFoot0, finalFoot0Direction)) {
+    //    angleToRotate = -angleToRotate;
+    //  }
+    //} else {
+    //  VCT currentBodyToFoot1 = U(V(shadowOfCenterOfRingOfHips, feet[1]));
+    //  // Final direction of hip0 after rotation completes
+    //  VCT finalFoot1Direction = R(newDirection, PI / 2 + PI / 3, zAxis);
+    //  angleToRotate = min(angle(currentBodyToFoot1, finalFoot1Direction), angularVelocity);
+      
+    //  // Check whether to rotate clockwise or counter-clockwise
+    //  if (!cw(zAxis, currentBodyToFoot1, finalFoot1Direction)) {
+    //    angleToRotate = -angleToRotate;
+    //  }
+    //}
     
-    currentBodyToFoot0 = R(currentBodyToFoot0, angleToRotate, zAxis);
+    // TODO: something wrong with angleToRotate causing it to oscillate
+    //currentBodyToFoot0 = R(currentBodyToFoot0, 0, zAxis);
     
-    hips[0] = P(centerOfBody, V(radiusOfRingOfHips, U(currentBodyToFoot0)));
+    VCT bodyToHip0 = V(currentBodyToFoot0);
+    bodyToHip0.z = 0;
+    hips[0] = P(centerOfBody, V(radiusOfRingOfHips, U(bodyToHip0)));
     
     for (int i = 1; i < 6; i++) {
       hips[i] = R(hips[i - 1], PI / 3, xAxis, yAxis, centerOfBody);
@@ -138,6 +156,7 @@ class BUG // class for manipulaitng a bug
     } else {
       // Odd indices stay the same; update even ones
       startIdx = 2;
+      
       feet[0] = P(shadowOfCenterOfRingOfHips, V(radiusOfRingOfFeet, U(currentBodyToFoot0)));
       feet[0].z = feetHeight;
     }
