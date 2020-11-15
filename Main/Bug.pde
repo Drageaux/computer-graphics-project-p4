@@ -78,12 +78,14 @@ class BUG // class for manipulaitng a bug
     target = newTarget;
   }
   
-  float velocity = 2.0;
+  static final float velocity = 1.0;
+  static final float angularVelocity = 0.1; // Max rotation per frame
   float distSinceLastSwap = 0; // Distance traveled since last time feet are swapped
-  float swapDistThreshold = 40; // Threshold of distSinceLastSwap to swap feet
+  float swapDistThreshold = 20; // Threshold of distSinceLastSwap to swap feet
   
-  VCT xAxis = V(1, 0, 0);
-  VCT yAxis = V(0, 1, 0);
+  final VCT xAxis = V(1, 0, 0);
+  final VCT yAxis = V(0, 1, 0);
+  final VCT zAxis = V(0, 0, 1);
 
   void updateConfiguration() {
     centerOfBody = P(shadowOfCenterOfRingOfHips, heightOfRingOfHips + bodyElevationAboveRingOfHips, upDirection);
@@ -97,33 +99,46 @@ class BUG // class for manipulaitng a bug
       swapFeet();
     }
     
-    VCT hip0Direction = V(radiusOfRingOfHips, U(R(newDirection)));
+    VCT currentBodyToFoot0 = U(V(shadowOfCenterOfRingOfHips, feet[0]));
+    // Final direction of hip0 after rotation completes
+    VCT finalFoot0Direction = R(newDirection, PI / 2, zAxis);
+    float angleToRotate = min(angle(currentBodyToFoot0, finalFoot0Direction), angularVelocity);
+    print("body to foot0.z: " + currentBodyToFoot0.z + ", final dir.z: " + finalFoot0Direction.z + "\n");
     
-    hips[0] = P(centerOfBody, hip0Direction);
+    // Check whether to rotate clockwise or counter-clockwise
+    if (!cw(zAxis, currentBodyToFoot0, finalFoot0Direction)) {
+      angleToRotate = -angleToRotate;
+    }
+    
+    currentBodyToFoot0 = R(currentBodyToFoot0, angleToRotate, zAxis);
+    
+    hips[0] = P(centerOfBody, V(radiusOfRingOfHips, U(currentBodyToFoot0)));
     
     for (int i = 1; i < 6; i++) {
       hips[i] = R(hips[i - 1], PI / 3, xAxis, yAxis, centerOfBody);
     }
     
     int startIdx;
-    VCT foot0Direction = V(radiusOfRingOfFeet, U(R(newDirection)));
-    
-    // The final location that foot 0 should be in after rotation completes
-    PNT foot0Point = P(shadowOfCenterOfRingOfHips, foot0Direction);
     
     if (evenFeetAreSupporting) {
       // Even indices stay the same; update odd indices
       startIdx = 3;
-      // TODO: do not rotate feet immediately to final angle; calculate how much rotation is needed and how much time is left
-      feet[1] = R(foot0Point, PI / 3, xAxis, yAxis, shadowOfCenterOfRingOfHips);
+      VCT currentBodyToFoot1 = U(V(shadowOfCenterOfRingOfHips, feet[1]));
+      VCT finalFoot1Direction = U(V(shadowOfCenterOfRingOfHips, hips[1]));
+      finalFoot1Direction.z = 0;
+      // !! angle() doesn't work; have to use angleAroundVertical somehow
+      float angleToRotateFoot1 = min(angleAroundVertical(currentBodyToFoot1, finalFoot1Direction), angularVelocity);
+      currentBodyToFoot1 = R(currentBodyToFoot1, angleToRotateFoot1, zAxis);
+      
+      feet[1] = P(shadowOfCenterOfRingOfHips, V(radiusOfRingOfFeet, U(currentBodyToFoot1)));
     } else {
       // Odd indices stay the same; update even ones
       startIdx = 2;
-      feet[0] = foot0Point;
+      feet[0] = P(shadowOfCenterOfRingOfHips, V(radiusOfRingOfFeet, U(currentBodyToFoot0)));;
     }
     
     for (int i = startIdx; i < 6; i += 2) {
-      feet[i] = R(feet[i - 2], PI * 2 / 3, xAxis, yAxis, shadowOfCenterOfRingOfHips);
+      feet[i] = R(feet[i-2], PI * 2 / 3, xAxis, yAxis, shadowOfCenterOfRingOfHips);
     }
   }
 
@@ -149,6 +164,13 @@ class BUG // class for manipulaitng a bug
       }
     } else {
       for (int i = 0; i < 6; i++) {
+        //if (i == 0) {
+        //  fill(magenta);
+        //} else if (i == 1) {
+        //  fill(dgreen);
+        //} else {
+        //  fill(blue);
+        //}
         caplet(hips[i], radiusOfHips, feet[i], radiusOfFeet);
       }
     }
