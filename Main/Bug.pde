@@ -23,7 +23,7 @@ class BUG // class for manipulaitng a bug
   // feet
   float radiusOfRingOfFeet = 300; // radius of ring of hips
   float radiusOfFeet = 10;
-  float upFeetMaxHeight = 0; // !! change and control
+  float upFeetMaxHeight = 150; // !! change and control
 
   // legs
   float limbLength = 200;
@@ -119,6 +119,10 @@ class BUG // class for manipulaitng a bug
     
     int startIdx;
     
+    float percentageDiffFromMiddle = abs(distSinceLastSwap / swapDistThreshold - 0.5);
+    // Taking power of 2 to smooth it out
+    float feetHeight = upFeetMaxHeight * (1 - pow(percentageDiffFromMiddle / 0.5, 2));
+    
     if (evenFeetAreSupporting) {
       // Even indices stay the same; update odd indices
       startIdx = 3;
@@ -130,10 +134,12 @@ class BUG // class for manipulaitng a bug
       currentBodyToFoot1 = R(currentBodyToFoot1, angleToRotateFoot1, zAxis);
       
       feet[1] = P(shadowOfCenterOfRingOfHips, V(radiusOfRingOfFeet, U(currentBodyToFoot1)));
+      feet[1].z = feetHeight;
     } else {
       // Odd indices stay the same; update even ones
       startIdx = 2;
-      feet[0] = P(shadowOfCenterOfRingOfHips, V(radiusOfRingOfFeet, U(currentBodyToFoot0)));;
+      feet[0] = P(shadowOfCenterOfRingOfHips, V(radiusOfRingOfFeet, U(currentBodyToFoot0)));
+      feet[0].z = feetHeight;
     }
     
     for (int i = startIdx; i < 6; i += 2) {
