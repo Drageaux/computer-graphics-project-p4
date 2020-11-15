@@ -81,7 +81,7 @@ class BUG // class for manipulaitng a bug
   static final float velocity = 1.0;
   static final float angularVelocity = 0.1; // Max rotation per frame
   float distSinceLastSwap = 0; // Distance traveled since last time feet are swapped
-  float swapDistThreshold = 20; // Threshold of distSinceLastSwap to swap feet
+  static final float swapDistThreshold = 20; // Threshold of distSinceLastSwap to swap feet
   
   final VCT xAxis = V(1, 0, 0);
   final VCT yAxis = V(0, 1, 0);
@@ -103,7 +103,6 @@ class BUG // class for manipulaitng a bug
     // Final direction of hip0 after rotation completes
     VCT finalFoot0Direction = R(newDirection, PI / 2, zAxis);
     float angleToRotate = min(angle(currentBodyToFoot0, finalFoot0Direction), angularVelocity);
-    print("body to foot0.z: " + currentBodyToFoot0.z + ", final dir.z: " + finalFoot0Direction.z + "\n");
     
     // Check whether to rotate clockwise or counter-clockwise
     if (!cw(zAxis, currentBodyToFoot0, finalFoot0Direction)) {
@@ -145,13 +144,11 @@ class BUG // class for manipulaitng a bug
   void swapFeet() {
     distSinceLastSwap = 0;
     evenFeetAreSupporting = !evenFeetAreSupporting;
-    print("Swapping\n");
   }
 
   void display() {
     fill(brown);
     show(centerOfBody, radiusOfBody);
-    //.....
     for (int i = 0; i < 6; i++) {
       show(hips[i], radiusOfHips);
     }
