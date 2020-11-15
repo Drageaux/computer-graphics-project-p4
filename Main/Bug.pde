@@ -209,47 +209,40 @@ class BUG // class for manipulaitng a bug
       show(centerOfRingOfUpFeet, 20);
     }
   }
+  
+  void showBentLeg(PNT A, PNT B, float l, float r) { 
+    VCT vertical = V(A, P(A.x, A.y, 0));
+    VCT straightLeg = V(A, B); // original leg
+    VCT orth = U(N(vertical, straightLeg)).mul(l);
+    
+  
+    // use limb length divided by 2 as hypotenuse; use straight leg length divided by 2 as one side
+    // to compute knee direction as well as its length from original leg's mid length
+    float lengthFromOriginalMidToKnee = sqrt( sq(l/2) - sq(straightLeg.norm()/2) );
+    VCT kneeDir = U(N(orth, straightLeg)).mul(lengthFromOriginalMidToKnee);
+    PNT kneePos = P( P(A,B), kneeDir);
+  
+    Boolean test = false;
+    if(test) {
+      // green vector normal to knee is cross product of red and blue
+      // blue is from feet at ground to hip
+      // red is orthogonal at midpoint from feet at ground
+      fill(blue);
+      arrow(A, B, 10);
+      fill(yellow);
+      arrow(A, vertical, 10);
+      fill(red);
+      arrow(P(A,B), orth, 10);
+      fill(dgreen);
+      arrow(P(A,B), kneePos, 10);
+      
+      fill(brown);
+      arrow(A, kneePos, 10);
+      arrow(kneePos, B, 10);
+    } else {
+      caplet(A, r, kneePos, radiusOfKnees);
+      sphere(kneePos, radiusOfKnees);
+      caplet(kneePos, radiusOfKnees, B, radiusOfFeet);
+    }    
+  }
 } // end of BUG
-
-
-
-void showBentLeg(PNT A, PNT B, float l, float r) {
-  //.....
-  // compute midpoint between foot and hip to make knee at mid
-  fill(blue);
-  arrow(A, B, 10);
-  
-  PNT mid = P(A, B);
-  float ogMidLegLength = V(A, mid).norm();
-
-  VCT vertical = V(A, P(A.x,A.y,0));
-  VCT straightLeg = V(A, B);
-  VCT orth = U(N(vertical, straightLeg)).mul(l);
-  
-  fill(yellow);
-  arrow(A, vertical, 10);
-  
-  fill(red);
-  arrow(mid, orth, 10);
-
-  // use arbitrary leg section as hypotenuse; use original leg's mid length as one side
-  // to compute knee direction as well as its length from original leg's mid length
-  //System.out.println("hip knee " + l/2 + " og mid " + ogMidLegLength);
-  float lengthFromOriginalMidToKnee = sqrt(sq(l/2)-sq(ogMidLegLength));
-  VCT kneeDir = U(N(orth, straightLeg)).mul(lengthFromOriginalMidToKnee);
-  PNT kneePos = P(mid, kneeDir);
-
-  fill(dgreen);
-  arrow(mid, kneePos, 10);
-  
-  fill(brown);
-  arrow(A, kneePos, 10);
-  arrow(kneePos, B, 10);
-  
-  //caplet(A, radiusOfKnees, kneePos, radiusOfFeet);
-  
-  
-  // green vector normal to knee is cross product of red and blue
-  // blue is from feet at ground to hip
-  // red is orthogonal at midpoint from feet at ground
-}
