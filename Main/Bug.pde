@@ -221,17 +221,20 @@ void showBentLeg(PNT A, PNT B, float l, float r) {
   
   PNT mid = P(A, B);
   float ogMidLegLength = V(A, mid).norm();
- 
-  VCT vertical = V(A, P(A.x,A.y,B.z));
+
+  VCT vertical = V(A, P(A.x,A.y,0));
   VCT straightLeg = V(A, B);
   VCT orth = U(N(vertical, straightLeg)).mul(l);
+  
+  fill(yellow);
+  arrow(A, vertical, 10);
   
   fill(red);
   arrow(mid, orth, 10);
 
   // use arbitrary leg section as hypotenuse; use original leg's mid length as one side
   // to compute knee direction as well as its length from original leg's mid length
-  System.out.println("hip knee " + l/2 + " og mid " + ogMidLegLength);
+  //System.out.println("hip knee " + l/2 + " og mid " + ogMidLegLength);
   float lengthFromOriginalMidToKnee = sqrt(sq(l/2)-sq(ogMidLegLength));
   VCT kneeDir = U(N(orth, straightLeg)).mul(lengthFromOriginalMidToKnee);
   PNT kneePos = P(mid, kneeDir);
