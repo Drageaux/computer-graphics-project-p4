@@ -211,10 +211,9 @@ class BUG // class for manipulaitng a bug
   }
   
   void showBentLeg(PNT A, PNT B, float l, float r) { 
-    VCT vertical = V(A, P(A.x, A.y, 0));
+    VCT vertical = upDirection;
     VCT straightLeg = V(A, B); // original leg
-    VCT orth = U(N(vertical, straightLeg)).mul(l);
-    
+    VCT orth = U(N(straightLeg, vertical)).mul(l);
   
     // use limb length divided by 2 as hypotenuse; use straight leg length divided by 2 as one side
     // to compute knee direction as well as its length from original leg's mid length
@@ -222,7 +221,7 @@ class BUG // class for manipulaitng a bug
     VCT kneeDir = U(N(orth, straightLeg)).mul(lengthFromOriginalMidToKnee);
     PNT kneePos = P( P(A,B), kneeDir);
   
-    Boolean test = false;
+    Boolean test = true;
     if(test) {
       // green vector normal to knee is cross product of red and blue
       // blue is from feet at ground to hip
