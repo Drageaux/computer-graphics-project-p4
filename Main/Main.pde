@@ -23,17 +23,37 @@ void settings() {
   //size(800, 800, P3D); // P3D means that we will do 3D graphics
 }
 
+int n = 3;
+BUG[] bugs = new BUG[n];
+BUG bug;
 void setup() {
   myFace = loadImage("data/pic.jpg"); // load image from file pic.jpg in folder data *** replace that file with your pic of your own face
   textureMode(NORMAL);
   noSmooth();
   frameRate(30);
-
-  bug.declare();
-  bug.reset();
-  bug.updateConfiguration();
-
-  _LookAtPt.reset(bug.centerOfRingOfDownFeet, 10);
+  
+  
+  for (int i = 0; i < n; i++){
+    BUG b = new BUG();
+    bugs[i] = b;
+    b.reset();
+    if (i != 0) {
+      
+      b.shadowOfCenterOfRingOfHips = P(b.shadowOfCenterOfRingOfHips.x + 800*i, b.shadowOfCenterOfRingOfHips.y + 800*i, b.shadowOfCenterOfRingOfHips.z); // floor projection of the center of the body of the bug
+      b.centerOfRingOfDownFeet = P(b.centerOfRingOfDownFeet.x + 800*i, b.centerOfRingOfDownFeet.y + 800*i, b.centerOfRingOfDownFeet.z); // remembers the floor projection of the centtoid of the 3 support feet
+      b.centerOfBody = P(b.centerOfBody.x + 800*i, b.centerOfBody.y + 800*i, b.centerOfBody.z); 
+      b.centerOfRingOfHips = P(b.centerOfRingOfHips.x + 800*i, b.centerOfRingOfHips.y + 800*i, b.centerOfRingOfHips.z); 
+      b.shadowOfCenterOfRingOfUpFeet = P(b.shadowOfCenterOfRingOfUpFeet.x + 800*i, b.shadowOfCenterOfRingOfUpFeet.y + 800*i, b.shadowOfCenterOfRingOfUpFeet.z); 
+      b.centerOfRingOfUpFeet = P(b.centerOfRingOfUpFeet.x + 800*i, b.centerOfRingOfUpFeet.y + 800*i, b.centerOfRingOfUpFeet.z); 
+    }
+   
+    b.declare();
+    System.out.println(b);
+    fill(red);
+    b.updateConfiguration();
+    
+    _LookAtPt.reset(b.centerOfRingOfDownFeet, 10);
+  }
 }
 
 void draw() {
@@ -45,18 +65,21 @@ void draw() {
   doPick(); // sets Of and axes for 3D GUI (see pick Tab)
 
 
-  if (mousePressed && keyPressed && (key == 'm' || key == 'r' || key == 't')) // when mouse is pressed (but no key), show red ball at surface point under the mouse (and its shadow)
-  {
-    target = L(target, 0.01, Of);
-    if (key == 'm') bug.moveTowardsTarget(target);
-    bug.updateConfiguration();
+  for (int i = 0; i < n; i++){
+    BUG b = bugs[i];
+    if (mousePressed && keyPressed && (key == 'm' || key == 'r' || key == 't')) // when mouse is pressed (but no key), show red ball at surface point under the mouse (and its shadow)
+    {
+      target = L(target, 0.01, Of);
+      if (key == 'm') b.moveTowardsTarget(target);
+      b.updateConfiguration();
+    }
+    b.display();
   }
-
-  bug.display();
+  
 
   popMatrix(); // done with 3D drawing. Restore front view for writing text on canvas
   hint(DISABLE_DEPTH_TEST); // no z-buffer test to ensure that help text is visible
-  scribeHeader("dz=" + dz + ", " + "angle=" + nf(bug.rotationAngle * 180 / PI, 1, 0), 1);
+  if (bug != null) scribeHeader("dz=" + dz + ", " + "angle=" + nf(bug.rotationAngle * 180 / PI, 1, 0), 1);
 
   // used for demos to show red circle when mouse/key is pressed and what key (disk may be hidden by the 3D model)
   if (mousePressed) {

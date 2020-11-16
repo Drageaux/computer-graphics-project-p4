@@ -1,6 +1,7 @@
 VCT upDirection = V(0, 0, 1);
 PNT target = P(800, 0, 0);
-BUG bug = new BUG();
+
+
 class BUG // class for manipulaitng a bug
   // BUG is degined by a ring of hips, a ring of down-feet and a ring of up-feet
 {
@@ -77,12 +78,12 @@ class BUG // class for manipulaitng a bug
   void moveTowardsTarget(PNT newTarget) {
     target = newTarget;
   }
-  
+
   static final float velocity = 1.0;
   static final float angularVelocity = 0.01; // Max rotation per frame
   float distSinceLastSwap = 0; // Distance traveled since last time feet are swapped
   static final float swapDistThreshold = 20; // Threshold of distSinceLastSwap to swap feet
-  
+
   final VCT xAxis = V(1, 0, 0);
   final VCT yAxis = V(0, 1, 0);
   final VCT zAxis = V(0, 0, 1);
@@ -93,21 +94,21 @@ class BUG // class for manipulaitng a bug
     shadowOfCenterOfRingOfHips = P(shadowOfCenterOfRingOfHips, velocity, newDirection);
     centerOfRingOfHips = P(centerOfRingOfHips, velocity, newDirection);
     centerOfRingOfUpFeet = P(centerOfRingOfUpFeet, velocity, newDirection);
-    
+
     distSinceLastSwap += velocity;
     if (distSinceLastSwap > swapDistThreshold) {
       swapFeet();
     }
-    
+
     VCT currentBodyToFoot0 = U(V(shadowOfCenterOfRingOfHips, feet[0]));
     //float angleToRotate;
-    
+
     //if (!evenFeetAreSupporting) {
     //  // Final direction of hip0 after rotation completes
     //  VCT finalFoot0Direction = R(newDirection, PI / 2, zAxis);
     //  angleToRotate = min(angle(currentBodyToFoot0, finalFoot0Direction), angularVelocity);
     //  print("Angle: " + angle(currentBodyToFoot0, finalFoot0Direction) + "\n");
-      
+
     //  // Check whether to rotate clockwise or counter-clockwise
     //  if (!cw(zAxis, currentBodyToFoot0, finalFoot0Direction)) {
     //    angleToRotate = -angleToRotate;
@@ -117,30 +118,30 @@ class BUG // class for manipulaitng a bug
     //  // Final direction of hip0 after rotation completes
     //  VCT finalFoot1Direction = R(newDirection, PI / 2 + PI / 3, zAxis);
     //  angleToRotate = min(angle(currentBodyToFoot1, finalFoot1Direction), angularVelocity);
-      
+
     //  // Check whether to rotate clockwise or counter-clockwise
     //  if (!cw(zAxis, currentBodyToFoot1, finalFoot1Direction)) {
     //    angleToRotate = -angleToRotate;
     //  }
     //}
-    
+
     // TODO: something wrong with angleToRotate causing it to oscillate
     //currentBodyToFoot0 = R(currentBodyToFoot0, 0, zAxis);
-    
+
     VCT bodyToHip0 = V(currentBodyToFoot0);
     bodyToHip0.z = 0;
     hips[0] = P(centerOfBody, V(radiusOfRingOfHips, U(bodyToHip0)));
-    
+
     for (int i = 1; i < 6; i++) {
       hips[i] = R(hips[i - 1], PI / 3, xAxis, yAxis, centerOfBody);
     }
-    
+
     int startIdx;
-    
+
     float percentageDiffFromMiddle = abs(distSinceLastSwap / swapDistThreshold - 0.5);
     // Taking power of 2 to smooth it out
     float feetHeight = upFeetMaxHeight * (1 - pow(percentageDiffFromMiddle / 0.5, 2));
-    
+
     if (evenFeetAreSupporting) {
       // Even indices stay the same; update odd indices
       startIdx = 3;
@@ -150,17 +151,17 @@ class BUG // class for manipulaitng a bug
       // !! angle() doesn't work; have to use angleAroundVertical somehow
       float angleToRotateFoot1 = min(angleAroundVertical(currentBodyToFoot1, finalFoot1Direction), angularVelocity);
       currentBodyToFoot1 = R(currentBodyToFoot1, angleToRotateFoot1, zAxis);
-      
+
       feet[1] = P(shadowOfCenterOfRingOfHips, V(radiusOfRingOfFeet, U(currentBodyToFoot1)));
       feet[1].z = feetHeight;
     } else {
       // Odd indices stay the same; update even ones
       startIdx = 2;
-      
+
       feet[0] = P(shadowOfCenterOfRingOfHips, V(radiusOfRingOfFeet, U(currentBodyToFoot0)));
       feet[0].z = feetHeight;
     }
-    
+
     for (int i = startIdx; i < 6; i += 2) {
       feet[i] = R(feet[i-2], PI * 2 / 3, xAxis, yAxis, shadowOfCenterOfRingOfHips);
     }
@@ -209,20 +210,20 @@ class BUG // class for manipulaitng a bug
       show(centerOfRingOfUpFeet, 20);
     }
   }
-  
+
   void showBentLeg(PNT A, PNT B, float l, float r) { 
     VCT vertical = upDirection;
     VCT straightLeg = V(A, B); // original leg
     VCT orth = U(N(straightLeg, vertical)).mul(l);
-  
+
     // use limb length divided by 2 as hypotenuse; use straight leg length divided by 2 as one side
     // to compute knee direction as well as its length from original leg's mid length
     float lengthFromOriginalMidToKnee = sqrt( sq(l/2) - sq(straightLeg.norm()/2) );
     VCT kneeDir = U(N(orth, straightLeg)).mul(lengthFromOriginalMidToKnee);
-    PNT kneePos = P( P(A,B), kneeDir);
-  
+    PNT kneePos = P( P(A, B), kneeDir);
+
     Boolean test = true;
-    if(test) {
+    if (test) {
       // green vector normal to knee is cross product of red and blue
       // blue is from feet at ground to hip
       // red is orthogonal at midpoint from feet at ground
@@ -231,10 +232,10 @@ class BUG // class for manipulaitng a bug
       fill(yellow);
       arrow(A, vertical, 10);
       fill(red);
-      arrow(P(A,B), orth, 10);
+      arrow(P(A, B), orth, 10);
       fill(dgreen);
-      arrow(P(A,B), kneePos, 10);
-      
+      arrow(P(A, B), kneePos, 10);
+
       fill(brown);
       arrow(A, kneePos, 10);
       arrow(kneePos, B, 10);
@@ -242,6 +243,6 @@ class BUG // class for manipulaitng a bug
       caplet(A, r, kneePos, radiusOfKnees);
       sphere(kneePos, radiusOfKnees);
       caplet(kneePos, radiusOfKnees, B, radiusOfFeet);
-    }    
+    }
   }
 } // end of BUG

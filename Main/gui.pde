@@ -3,7 +3,7 @@ void keyPressed() {
   if (key == '~') filming = !filming;
   if (key == '?') scribeText = !scribeText;
   if (key == 'b') showBentLegs = !showBentLegs;
-  if (key == 'x') {
+  if (key == 'x' && bug != null) {
     bug.swapFeet();
     bug.updateConfiguration();
   }
@@ -11,7 +11,7 @@ void keyPressed() {
   if (key == 'a') {
     animating = !animating;
   } // toggle animation
-  if (key == 'z') {
+  if (key == 'z' && bug != null) {
     bug.reset();
     bug.updateConfiguration();
   }
