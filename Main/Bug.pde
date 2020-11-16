@@ -224,7 +224,7 @@ class BUG // class for manipulaitng a bug
     VCT kneeDir = U(N(orth, straightLeg)).mul(lengthFromOriginalMidToKnee);
     PNT kneePos = P( P(A, B), kneeDir);
 
-    Boolean test = true;
+    Boolean test = false;
     if (test) {
       // green vector normal to knee is cross product of red and blue
       // blue is from feet at ground to hip

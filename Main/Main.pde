@@ -83,9 +83,14 @@ void draw() {
     if (mousePressed && keyPressed && (key == 'm' || key == 'r' || key == 't')) // when mouse is pressed (but no key), show red ball at surface point under the mouse (and its shadow)
     {
       if (i > 0) {
-        float distance = 400;
+        float keepDistance = 800;
+        VCT targetVct = V(b.shadowOfCenterOfRingOfHips, bugs[i-1].shadowOfCenterOfRingOfHips);
+        float currentDistance = targetVct.norm();
+        float validDistance = currentDistance - keepDistance;
+        targetVct = U(targetVct).mul(validDistance);
+        PNT targetPoint = P(b.shadowOfCenterOfRingOfHips, targetVct);
         
-        b.target = L(bugs[i-1].shadowOfCenterOfRingOfHips, 0.01, Of);
+        b.target = L(targetPoint, 0.01, Of);
         if (key == 'm') b.moveTowardsTarget(b.target);
         b.updateConfiguration();
       } else {
