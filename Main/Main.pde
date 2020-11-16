@@ -24,7 +24,7 @@ void settings() {
 }
 
 int n = 3;
-BUG[] bugs = new BUG[n];
+BUG[] bugs;
 BUG bug;
 void setup() {
   myFace = loadImage("data/pic.jpg"); // load image from file pic.jpg in folder data *** replace that file with your pic of your own face
@@ -33,23 +33,23 @@ void setup() {
   frameRate(30);
   
   
+  bugs = new BUG[n];
   for (int i = 0; i < n; i++){
+    System.out.println(n);
     BUG b = new BUG();
     bugs[i] = b;
     b.reset();
     if (i != 0) {
-      
       b.shadowOfCenterOfRingOfHips = P(b.shadowOfCenterOfRingOfHips.x + 800*i, b.shadowOfCenterOfRingOfHips.y + 800*i, b.shadowOfCenterOfRingOfHips.z); // floor projection of the center of the body of the bug
       b.centerOfRingOfDownFeet = P(b.centerOfRingOfDownFeet.x + 800*i, b.centerOfRingOfDownFeet.y + 800*i, b.centerOfRingOfDownFeet.z); // remembers the floor projection of the centtoid of the 3 support feet
       b.centerOfBody = P(b.centerOfBody.x + 800*i, b.centerOfBody.y + 800*i, b.centerOfBody.z); 
       b.centerOfRingOfHips = P(b.centerOfRingOfHips.x + 800*i, b.centerOfRingOfHips.y + 800*i, b.centerOfRingOfHips.z); 
       b.shadowOfCenterOfRingOfUpFeet = P(b.shadowOfCenterOfRingOfUpFeet.x + 800*i, b.shadowOfCenterOfRingOfUpFeet.y + 800*i, b.shadowOfCenterOfRingOfUpFeet.z); 
-      b.centerOfRingOfUpFeet = P(b.centerOfRingOfUpFeet.x + 800*i, b.centerOfRingOfUpFeet.y + 800*i, b.centerOfRingOfUpFeet.z); 
+      b.centerOfRingOfUpFeet = P(b.centerOfRingOfUpFeet.x + 800*i, b.centerOfRingOfUpFeet.y + 800*i, b.centerOfRingOfUpFeet.z);
+      b.target = bugs[i-1].shadowOfCenterOfRingOfHips;
     }
    
     b.declare();
-    System.out.println(b);
-    fill(red);
     b.updateConfiguration();
     
     _LookAtPt.reset(b.centerOfRingOfDownFeet, 10);
@@ -64,14 +64,35 @@ void draw() {
   showFloor(); // draws dance floor as yellow mat
   doPick(); // sets Of and axes for 3D GUI (see pick Tab)
 
+  if (keyPressed) {
+    if (key == ',' || key == '.') {
+      if (key == ',' && n > 1) {
+        n = n-1;
+        setup();
+      } else if (key == '.' && n < 5){
+        n = n+1;
+        setup();
+      }
+    }
+  }
 
   for (int i = 0; i < n; i++){
     BUG b = bugs[i];
+    
+    
     if (mousePressed && keyPressed && (key == 'm' || key == 'r' || key == 't')) // when mouse is pressed (but no key), show red ball at surface point under the mouse (and its shadow)
     {
-      target = L(target, 0.01, Of);
-      if (key == 'm') b.moveTowardsTarget(target);
-      b.updateConfiguration();
+      if (i > 0) {
+        float distance = 400;
+        
+        b.target = L(bugs[i-1].shadowOfCenterOfRingOfHips, 0.01, Of);
+        if (key == 'm') b.moveTowardsTarget(b.target);
+        b.updateConfiguration();
+      } else {
+        b.target = L(b.target, 0.01, Of);
+        if (key == 'm') b.moveTowardsTarget(b.target);
+        b.updateConfiguration(); 
+      }
     }
     b.display();
   }

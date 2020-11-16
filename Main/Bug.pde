@@ -1,5 +1,4 @@
 VCT upDirection = V(0, 0, 1);
-PNT target = P(800, 0, 0);
 
 
 class BUG // class for manipulaitng a bug
@@ -46,6 +45,9 @@ class BUG // class for manipulaitng a bug
   PNT centerOfRingOfUpFeet = P();
   PNT[] hips = new PNT[6];
   PNT[] feet = new PNT[6];
+  
+  // ***** 
+  PNT target = P(200, 0, 0);
 
   BUG() {
   }
