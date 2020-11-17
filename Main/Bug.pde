@@ -103,32 +103,6 @@ class BUG // class for manipulaitng a bug
     }
 
     VCT currentBodyToFoot0 = U(V(shadowOfCenterOfRingOfHips, feet[0]));
-    //float angleToRotate;
-
-    //if (!evenFeetAreSupporting) {
-    //  // Final direction of hip0 after rotation completes
-    //  VCT finalFoot0Direction = R(newDirection, PI / 2, zAxis);
-    //  angleToRotate = min(angle(currentBodyToFoot0, finalFoot0Direction), angularVelocity);
-    //  print("Angle: " + angle(currentBodyToFoot0, finalFoot0Direction) + "\n");
-
-    //  // Check whether to rotate clockwise or counter-clockwise
-    //  if (!cw(zAxis, currentBodyToFoot0, finalFoot0Direction)) {
-    //    angleToRotate = -angleToRotate;
-    //  }
-    //} else {
-    //  VCT currentBodyToFoot1 = U(V(shadowOfCenterOfRingOfHips, feet[1]));
-    //  // Final direction of hip0 after rotation completes
-    //  VCT finalFoot1Direction = R(newDirection, PI / 2 + PI / 3, zAxis);
-    //  angleToRotate = min(angle(currentBodyToFoot1, finalFoot1Direction), angularVelocity);
-
-    //  // Check whether to rotate clockwise or counter-clockwise
-    //  if (!cw(zAxis, currentBodyToFoot1, finalFoot1Direction)) {
-    //    angleToRotate = -angleToRotate;
-    //  }
-    //}
-
-    // TODO: something wrong with angleToRotate causing it to oscillate
-    //currentBodyToFoot0 = R(currentBodyToFoot0, 0, zAxis);
 
     VCT bodyToHip0 = V(currentBodyToFoot0);
     bodyToHip0.z = 0;
