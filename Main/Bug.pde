@@ -163,13 +163,6 @@ class BUG // class for manipulaitng a bug
       }
     } else {
       for (int i = 0; i < 6; i++) {
-        //if (i == 0) {
-        //  fill(magenta);
-        //} else if (i == 1) {
-        //  fill(dgreen);
-        //} else {
-        //  fill(blue);
-        //}
         caplet(hips[i], radiusOfHips, feet[i], radiusOfFeet);
       }
     }
