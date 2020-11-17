@@ -81,10 +81,10 @@ class BUG // class for manipulaitng a bug
     target = newTarget;
   }
 
-  static final float velocity = 1.0;
+  static final float velocity = 4.0;
   static final float angularVelocity = 0.01; // Max rotation per frame
   float distSinceLastSwap = 0; // Distance traveled since last time feet are swapped
-  static final float swapDistThreshold = 20; // Threshold of distSinceLastSwap to swap feet
+  static final float swapDistThreshold = 80; // Threshold of distSinceLastSwap to swap feet
 
   final VCT xAxis = V(1, 0, 0);
   final VCT yAxis = V(0, 1, 0);
